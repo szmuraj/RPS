@@ -6,11 +6,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class RPS {
-
+    static int computerScore = 0;
+    static int playerScore = 0;
+    static int draw = 0;
     public static void main(String[] args) {
         final String youPlayAs = "You play as ";
         final String computerPlayAs = "Computer play as ";
-        final String confirmation = "Are you sure y/n";
+        final String confirmation = "Are you sure y/n\n";
         final String computerWin = "This time computer wins do you wanna play one more? y/n";
         final String playerWin = "This time player wins do you wanna play once more? y/n";
 
@@ -20,6 +22,7 @@ public class RPS {
         types.add("scissors");
 
         System.out.print("""
+                
                 key 1 - play as "Rock",
                 key 2 - play as "Paper",
                 key 3 - play as "Scissors",
@@ -29,7 +32,7 @@ public class RPS {
                 """);
         Scanner scan = new Scanner(System.in);
         String type = scan.nextLine();
-        int random = new Random().nextInt(1,4);
+        int random = new Random().nextInt(1, 4);
         String randomType = "" + random;
 
         switch (type) {
@@ -47,7 +50,20 @@ public class RPS {
                     throw new IllegalStateException("Unexpected value: " + type);
                 }
             }
-            case "n" -> System.out.print(confirmation);
+            case "n" -> {
+                System.out.print(confirmation);
+                String yesNo = scan.nextLine();
+                if (yesNo.equals("y")) {
+                    computerScore = 0;
+                    playerScore = 0;
+                    draw = 0;
+                    main(new String[]{""});
+                } else if (yesNo.equals("n")) {
+                    main(new String[]{""});
+                } else {
+                    throw new IllegalStateException("Unexpected value: " + type);
+                }
+            }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
@@ -61,26 +77,36 @@ public class RPS {
 
         System.out.println();
 
-        if(type.equals(randomType)) {
+        if (type.equals(randomType)) {
             System.out.println("It's a draw");
-        } else if(type.equals("1")) {
-            if(randomType.equals("2")) {
+            draw++;
+        } else if (type.equals("1")) {
+            if (randomType.equals("2")) {
                 System.out.println(computerWin);
+                computerScore++;
             } else if (randomType.equals("3")) {
                 System.out.println(playerWin);
+                playerScore++;
             }
         } else if (type.equals("2")) {
             if (randomType.equals("1")) {
                 System.out.println(playerWin);
+                playerScore++;
             } else if (randomType.equals("3")) {
                 System.out.println(computerWin);
+                computerScore++;
             }
         } else if (type.equals("3")) {
             if (randomType.equals("1")) {
                 System.out.println(computerWin);
+                computerScore++;
             } else if (randomType.equals("2")) {
                 System.out.println(playerWin);
+                playerScore++;
             }
         }
+        final String scoreBoard = " Computer | Player \n          |          \n     " + computerScore + "    |    " + playerScore + "    \n     Draw - " + draw;
+        System.out.println(scoreBoard);
+        main(new String[]{""});
     }
 }
